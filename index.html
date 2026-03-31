@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Math Adventure!</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-rainbow">
+
+  <!-- Welcome Screen -->
+  <div id="screen-welcome" class="screen active">
+    <div class="card welcome-card">
+      <h1 class="title">🧮 Math Adventure!</h1>
+      <p class="subtitle">Practice your math skills!</p>
+
+      <div class="section-label">Choose your operation:</div>
+      <div class="operation-grid">
+        <button class="op-btn active" data-op="add">➕ Add</button>
+        <button class="op-btn" data-op="subtract">➖ Subtract</button>
+        <button class="op-btn" data-op="multiply">✖️ Multiply</button>
+        <button class="op-btn" data-op="divide">➗ Divide</button>
+      </div>
+
+      <div class="section-label">Choose your level:</div>
+      <div class="level-grid">
+        <button class="level-btn active" data-level="easy">🌱 Easy<span>1–10</span></button>
+        <button class="level-btn" data-level="medium">🌟 Medium<span>1–20</span></button>
+        <button class="level-btn" data-level="hard">🚀 Hard<span>1–50</span></button>
+      </div>
+
+      <div class="section-label">Choose your theme:</div>
+      <div class="theme-grid">
+        <button class="theme-btn active" data-theme="theme-rainbow">🌈 Rainbow</button>
+        <button class="theme-btn" data-theme="theme-ocean">🌊 Ocean</button>
+        <button class="theme-btn" data-theme="theme-space">🚀 Space</button>
+        <button class="theme-btn" data-theme="theme-jungle">🌿 Jungle</button>
+        <button class="theme-btn" data-theme="theme-candy">🍭 Candy</button>
+        <button class="theme-btn" data-theme="theme-sunset">🌅 Sunset</button>
+      </div>
+
+      <button id="btn-start" class="btn-primary">Let's Play! 🎉</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="screen-game" class="screen">
+    <div class="card game-card">
+      <div class="game-header">
+        <div class="score-box">⭐ Score: <span id="score">0</span></div>
+        <div class="question-box">Question <span id="q-num">1</span> of 10</div>
+        <div class="timer-box">⏱️ <span id="timer">30</span>s</div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+
+      <div id="feedback" class="feedback hidden"></div>
+
+      <div class="equation-wrap">
+        <div id="equation" class="equation">? + ? = ?</div>
+      </div>
+
+      <div class="answer-wrap">
+        <input id="answer-input" type="number" class="answer-input" placeholder="Your answer" autocomplete="off" />
+        <button id="btn-submit" class="btn-primary btn-submit">Check ✓</button>
+      </div>
+
+      <div class="hint-row">
+        <button id="btn-hint" class="btn-hint">💡 Hint</button>
+        <div id="hint-text" class="hint-text hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div id="screen-results" class="screen">
+    <div class="card results-card">
+      <div id="result-emoji" class="result-emoji">🏆</div>
+      <h2 id="result-title" class="result-title">Amazing!</h2>
+      <p id="result-subtitle" class="result-subtitle"></p>
+
+      <div class="result-stats">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-score">0</div>
+          <div class="stat-label">Score</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-correct">0</div>
+          <div class="stat-label">Correct</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-time">0s</div>
+          <div class="stat-label">Avg Time</div>
+        </div>
+      </div>
+
+      <div class="result-buttons">
+        <button id="btn-play-again" class="btn-primary">Play Again 🎮</button>
+        <button id="btn-home" class="btn-secondary">Change Settings ⚙️</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confetti-container"></div>
+  <script src="script.js"></script>
+</body>
+</html>

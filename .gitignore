@@ -1,0 +1,84 @@
+# ===== macOS =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+Icon
+
+# ===== Windows =====
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ===== Linux =====
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===== Node.js =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ===== Build outputs =====
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+.vite/
+
+# ===== Environment & secrets =====
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+*.pem
+*.key
+
+# ===== Editors =====
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Vim / Emacs
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ===== Logs =====
+logs/
+*.log
+
+# ===== Misc =====
+*.tmp
+*.temp
+.sass-cache/
