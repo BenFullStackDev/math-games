@@ -12,14 +12,10 @@ A colourful math game for elementary school students. Practise addition, subtrac
 - **Confetti** celebration for great scores
 - No install needed — pure HTML/CSS/JS
 
-## Deploying to Render.com
+## Play Online
 
-1. Push this repo to GitHub.
-2. Go to [render.com](https://render.com) → **New** → **Static Site**.
-3. Connect your GitHub repo.
-4. Render will auto-detect `render.yaml` and deploy.
-5. Your site will be live at `https://math-adventure.onrender.com` (or your chosen name).
+[Play Math Adventure](https://math-games-vpds.onrender.com/)
 
-## Running Locally
+## License
 
-Just open `index.html` in any browser — no server required.
+MIT License
