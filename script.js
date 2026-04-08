@@ -24,6 +24,20 @@ const state = {
 const LEVEL_RANGES = { easy: 10, medium: 20, hard: 50 };
 const TIME_LIMIT = 30;
 
+// ===== SOUNDS =====
+const sounds = {
+  correct:  new Audio('public/correct.mp3'),
+  wrong:    new Audio('public/uh-oh.mp3'),
+  confetti: new Audio('public/confetti.mp3'),
+};
+
+function playSound(name) {
+  const snd = sounds[name];
+  if (!snd) return;
+  snd.currentTime = 0;
+  snd.play().catch(() => {}); // silently ignore autoplay blocks
+}
+
 // ===== DOM REFS =====
 const $ = id => document.getElementById(id);
 const screens = {
@@ -426,8 +440,10 @@ function submitAnswer(userAnswer) {
 
     state.score += points;
     state.correctCount++;
+    playSound('correct');
     showFeedback(true, `Correct! +${points} ⭐`);
   } else {
+    playSound('wrong');
     showFeedback(false, `Not quite! The answer was ${state.currentAnswer}`);
   }
 
@@ -552,6 +568,7 @@ function endGame() {
 
 // ===== CONFETTI =====
 function launchConfetti() {
+  playSound('confetti');
   const colors = ['#ff6b9d','#ffa552','#43e97b','#38f9d7','#7b2ff7','#ffd200','#00d4ff'];
   const container = $('confetti-container');
   container.innerHTML = '';
