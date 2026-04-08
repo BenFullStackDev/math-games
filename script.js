@@ -10,6 +10,8 @@ const state = {
   totalQuestions: 10,
   correctCount: 0,
   currentAnswer: null,
+  currentChoices: [],
+  numpadValue: '',
   timerInterval: null,
   timeLeft: 30,
   questionStartTime: null,
@@ -65,7 +67,6 @@ function generateQuestion() {
       break;
 
     case 'multiply': {
-      // Keep numbers small enough for elementary
       const mMax = state.level === 'easy' ? 5 : state.level === 'medium' ? 10 : 12;
       a = rand(1, mMax);
       b = rand(1, mMax);
@@ -75,11 +76,10 @@ function generateQuestion() {
     }
 
     case 'divide': {
-      // Generate division with whole-number answers
       const dMax = state.level === 'easy' ? 5 : state.level === 'medium' ? 10 : 12;
-      b = rand(1, dMax);          // divisor
-      answer = rand(1, dMax);     // quotient
-      a = b * answer;             // dividend = divisor × quotient
+      b = rand(1, dMax);
+      answer = rand(1, dMax);
+      a = b * answer;
       display = `${a} ÷ ${b} = ?`;
       break;
     }
@@ -92,6 +92,61 @@ function generateQuestion() {
 
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// ===== MULTIPLE CHOICE (EASY) =====
+function generateChoices(correctAnswer) {
+  const wrongSet = new Set();
+  let attempts = 0;
+
+  while (wrongSet.size < 3 && attempts < 200) {
+    attempts++;
+    const candidate = rand(Math.max(0, correctAnswer - 10), correctAnswer + 10);
+    if (candidate !== correctAnswer) {
+      wrongSet.add(candidate);
+    }
+  }
+
+  // Fallback: sequential values if range was too narrow
+  let fallback = correctAnswer + 1;
+  while (wrongSet.size < 3) {
+    if (fallback !== correctAnswer) wrongSet.add(fallback);
+    fallback++;
+  }
+
+  return shuffleArray([correctAnswer, ...wrongSet]);
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ===== NUMPAD =====
+function updateNumpadDisplay() {
+  const display = $('numpad-display');
+  if (state.numpadValue === '') {
+    display.textContent = '?';
+    display.classList.add('numpad-display-empty');
+  } else {
+    display.textContent = state.numpadValue;
+    display.classList.remove('numpad-display-empty');
+  }
+}
+
+function setNumpadDisabled(disabled) {
+  document.querySelectorAll('.numpad-btn').forEach(btn => {
+    btn.disabled = disabled;
+  });
+}
+
+// ===== INPUT MODE =====
+function showInputMode(mode) {
+  $('choice-wrap').classList.toggle('hidden', mode !== 'choice');
+  $('numpad-wrap').classList.toggle('hidden', mode !== 'numpad');
 }
 
 // ===== TIMER =====
@@ -134,6 +189,7 @@ function startGame() {
   state.questionNum = 0;
   state.correctCount = 0;
   state.totalTimeTaken = 0;
+  state.numpadValue = '';
 
   showScreen('game');
   nextQuestion();
@@ -152,32 +208,39 @@ function nextQuestion() {
   const { display } = generateQuestion();
   $('equation').textContent = display;
 
-  const input = $('answer-input');
-  input.value = '';
-  input.focus();
-
   hideFeedback();
   $('hint-text').classList.add('hidden');
+
+  if (state.level === 'easy') {
+    // Generate and display multiple choice options
+    state.currentChoices = generateChoices(state.currentAnswer);
+    const choiceBtns = document.querySelectorAll('.choice-btn');
+    choiceBtns.forEach((btn, i) => {
+      btn.textContent = state.currentChoices[i];
+      btn.dataset.value = state.currentChoices[i];
+      btn.classList.remove('correct', 'incorrect');
+      btn.disabled = false;
+    });
+    showInputMode('choice');
+  } else {
+    // Reset and show numpad
+    state.numpadValue = '';
+    updateNumpadDisplay();
+    setNumpadDisabled(false);
+    showInputMode('numpad');
+  }
 
   state.questionStartTime = Date.now();
   startTimer();
 }
 
-function submitAnswer() {
-  const input = $('answer-input');
-  const raw = input.value.trim();
-  if (raw === '') return;
-
-  const userAnswer = parseInt(raw, 10);
-  if (isNaN(userAnswer)) return;
-
+function submitAnswer(userAnswer) {
   stopTimer();
 
   const timeTaken = (Date.now() - state.questionStartTime) / 1000;
   state.totalTimeTaken += timeTaken;
 
   if (userAnswer === state.currentAnswer) {
-    // Correct — bonus for speed and no hint
     let points = 10;
     if (timeTaken < 5 && !state.hintUsed) points = 15;
     else if (timeTaken < 10 && !state.hintUsed) points = 12;
@@ -197,8 +260,41 @@ function submitAnswer() {
   }, 1500);
 }
 
+function submitChoiceAnswer(selectedValue, clickedBtn) {
+  // Highlight all buttons: correct one green, wrong clicked one red
+  document.querySelectorAll('.choice-btn').forEach(btn => {
+    btn.disabled = true;
+    if (parseInt(btn.dataset.value, 10) === state.currentAnswer) {
+      btn.classList.add('correct');
+    } else if (btn === clickedBtn) {
+      btn.classList.add('incorrect');
+    }
+  });
+  submitAnswer(selectedValue);
+}
+
+function submitNumpadAnswer() {
+  if (state.numpadValue === '') return;
+  const userAnswer = parseInt(state.numpadValue, 10);
+  if (isNaN(userAnswer)) return;
+  setNumpadDisabled(true);
+  submitAnswer(userAnswer);
+}
+
 function handleTimeout() {
   state.totalTimeTaken += TIME_LIMIT;
+
+  if (state.level === 'easy') {
+    document.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.disabled = true;
+      if (parseInt(btn.dataset.value, 10) === state.currentAnswer) {
+        btn.classList.add('correct');
+      }
+    });
+  } else {
+    setNumpadDisabled(true);
+  }
+
   showFeedback(false, `Time's up! The answer was ${state.currentAnswer}`);
   setTimeout(() => nextQuestion(), 1600);
 }
@@ -227,7 +323,6 @@ function showHint() {
     case 'divide':   hint = `Think: how many groups of equal size fit in?`; break;
   }
 
-  // Also give a numeric nudge
   if (ans <= 10) hint += ` (The answer is between ${Math.max(0, ans - 3)} and ${ans + 3})`;
 
   const hintEl = $('hint-text');
@@ -322,12 +417,35 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
 // Start
 $('btn-start').addEventListener('click', startGame);
 
-// Submit answer
-$('btn-submit').addEventListener('click', submitAnswer);
+// Multiple choice buttons
+document.querySelectorAll('.choice-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.disabled) return;
+    const selected = parseInt(btn.dataset.value, 10);
+    submitChoiceAnswer(selected, btn);
+  });
+});
 
-// Enter key submits
-$('answer-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitAnswer();
+// Numpad buttons
+document.querySelectorAll('.numpad-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.disabled) return;
+    const val = btn.dataset.val;
+    if (val === 'back') {
+      state.numpadValue = state.numpadValue.slice(0, -1);
+      updateNumpadDisplay();
+    } else if (val === 'submit') {
+      submitNumpadAnswer();
+    } else {
+      // Prevent leading zeros (except if only "0")
+      if (state.numpadValue === '0') {
+        state.numpadValue = val;
+      } else if (state.numpadValue.length < 4) {
+        state.numpadValue += val;
+      }
+      updateNumpadDisplay();
+    }
+  });
 });
 
 // Hint
