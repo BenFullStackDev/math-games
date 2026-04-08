@@ -167,6 +167,19 @@ body {
 }
 .op-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
 
+/* Locked operation buttons (not available for the selected level) */
+.op-btn.op-locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+
+/* Mixed Ops / Order of Ops — subtle dashed border to signal "special" */
+.op-btn.op-special {
+  border-style: dashed;
+}
+
 /* Level buttons */
 .level-grid {
   display: grid;
