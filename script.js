@@ -412,6 +412,7 @@ function nextQuestion() {
       btn.dataset.value = state.currentChoices[i];
       btn.classList.remove('correct', 'incorrect');
       btn.disabled = false;
+      btn.blur();
     });
     showInputMode('choice');
   } else {
