@@ -24,9 +24,6 @@ body {
   background: linear-gradient(135deg, #ff6b9d, #ffa552); color: #fff;
 }
 .theme-rainbow .numpad-submit { background: linear-gradient(135deg, #ff6b9d, #ffa552); }
-.theme-rainbow .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  background: rgba(255, 107, 157, 0.12); border-color: #ff6b9d;
-}
 
 .theme-ocean {
   background: linear-gradient(135deg, #1a6b8a 0%, #1cb5e0 50%, #48d1cc 100%);
@@ -37,9 +34,6 @@ body {
   background: linear-gradient(135deg, #0077b6, #00b4d8); color: #fff;
 }
 .theme-ocean .numpad-submit { background: linear-gradient(135deg, #0077b6, #00b4d8); }
-.theme-ocean .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  background: rgba(0, 119, 182, 0.1); border-color: #0077b6;
-}
 
 .theme-space {
   background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
@@ -65,9 +59,6 @@ body {
 .theme-space .choice-btn {
   background: rgba(123,47,247,0.2); color: #e0d7ff; border-color: #7b2ff7;
 }
-.theme-space .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  background: rgba(123, 47, 247, 0.35); border-color: #00d4ff;
-}
 
 .theme-jungle {
   background: linear-gradient(135deg, #1b4332, #2d6a4f, #52b788);
@@ -78,9 +69,6 @@ body {
   background: linear-gradient(135deg, #2d6a4f, #74c69d); color: #fff;
 }
 .theme-jungle .numpad-submit { background: linear-gradient(135deg, #2d6a4f, #74c69d); }
-.theme-jungle .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  background: rgba(45, 106, 79, 0.1); border-color: #2d6a4f;
-}
 
 .theme-candy {
   background: linear-gradient(135deg, #ff77a9, #ffb347, #b39ddb, #80deea);
@@ -91,9 +79,6 @@ body {
   background: linear-gradient(135deg, #e91e8c, #ff77a9); color: #fff;
 }
 .theme-candy .numpad-submit { background: linear-gradient(135deg, #e91e8c, #ff77a9); }
-.theme-candy .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  background: rgba(233, 30, 140, 0.1); border-color: #e91e8c;
-}
 
 .theme-sunset {
   background: linear-gradient(135deg, #f7971e, #ffd200, #ff4e50);
@@ -104,13 +89,32 @@ body {
   background: linear-gradient(135deg, #f7971e, #ff4e50); color: #fff;
 }
 .theme-sunset .numpad-submit { background: linear-gradient(135deg, #f7971e, #ff4e50); }
-.theme-sunset .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  background: rgba(247, 151, 30, 0.12); border-color: #f7971e;
-}
 
 /* ===== SCREENS ===== */
 .screen { display: none; width: 100%; max-width: 540px; margin: auto; }
 .screen.active { display: flex; justify-content: center; }
+
+/* Choice button hover — only on real pointer devices to prevent iOS sticky-hover */
+@media (hover: hover) {
+  .theme-rainbow .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    background: rgba(255, 107, 157, 0.12); border-color: #ff6b9d;
+  }
+  .theme-ocean .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    background: rgba(0, 119, 182, 0.1); border-color: #0077b6;
+  }
+  .theme-space .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    background: rgba(123, 47, 247, 0.35); border-color: #00d4ff;
+  }
+  .theme-jungle .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    background: rgba(45, 106, 79, 0.1); border-color: #2d6a4f;
+  }
+  .theme-candy .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    background: rgba(233, 30, 140, 0.1); border-color: #e91e8c;
+  }
+  .theme-sunset .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    background: rgba(247, 151, 30, 0.12); border-color: #f7971e;
+  }
+}
 
 /* ===== CARD ===== */
 .card {
@@ -359,9 +363,11 @@ body {
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
   letter-spacing: 1px;
 }
-.choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+@media (hover: hover) {
+  .choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+  }
 }
 .choice-btn:active:not(:disabled) { transform: translateY(0); }
 .choice-btn:disabled { cursor: default; }
@@ -672,7 +678,7 @@ body {
 @media (hover: none) {
   .op-btn:hover, .level-btn:hover, .theme-btn:hover,
   .btn-primary:hover, .btn-secondary:hover, .btn-hint:hover,
-  .numpad-btn:hover, .choice-btn:hover {
+  .numpad-btn:hover {
     transform: none;
     box-shadow: none;
   }
